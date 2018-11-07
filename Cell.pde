@@ -39,6 +39,14 @@ class Cell {
 		}	
 	}
 
+	JSONArray getWallJsonArray(){
+		JSONArray wallJsonArray = new JSONArray();
+		for (int i = 0; i < walls.length ; ++i) {
+			wallJsonArray.setInt(i,walls[i]);
+		}
+		return wallJsonArray;
+	}
+
 	int getCellNumber(){
 		return cellNumber;
 	};
@@ -57,6 +65,15 @@ class Cell {
 
 	boolean getBean(){
 		return hasBean;
+	}
+
+	void setWall(int wallNum){		
+		int wallValue = walls[wallNum];		
+		if (wallValue == 0) {
+			walls[wallNum] = 1;				
+		}else{
+			walls[wallNum] = 0;
+		}
 	}
 
 	boolean hasWall(int direction){
