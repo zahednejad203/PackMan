@@ -47,8 +47,6 @@ class CreationMap extends Map implements Response {
 							}
 						}
 					}
-				}else if (key == 's') {
-					saveMap();
 				}
 			}else{
 				if (selectedCell != null) {
@@ -93,6 +91,7 @@ class CreationMap extends Map implements Response {
 	void setNumber(int number){
 		listenersNumber.add(number);
 	}
+	
 	ArrayList<Integer> getNumber(){
 		return listenersNumber;
 	}

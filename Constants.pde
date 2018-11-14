@@ -11,6 +11,7 @@ char RIGHT_DIR_L = 'd';
 char LEFT_DIR_L = 'a';
 
 String GAME_FINISHED = "Finished";
+String GAME_SELECTIN_MAP = "SelectingMap";
 String GAME_PLAYING = "Playing";
 String GAME_CREATING = "Creating";
 String GAME_NOT_STARTED = "NotStarted";

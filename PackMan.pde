@@ -1,4 +1,4 @@
-public class PackMan {
+class PackMan {
 
 	float pWidth = 0;
 	float pHeight = 0;
@@ -10,13 +10,23 @@ public class PackMan {
 	int score = 0;
 	color packColor ;
 	String name = "";
+	Callback callback;
 
-	public PackMan (Cell initialCell, float initialWidth , float initialHeight , color initialColor , String initalName) {
-		this.setCurrentCell(initialCell);
+	public PackMan (Cell initialCell, float initialWidth , float initialHeight , color initialColor , String initalName , Callback initialCallback) {
 		pWidth = initialWidth;
 		pHeight = initialHeight;
 		packColor = initialColor;
 		name = initalName;
+		callback = initialCallback;
+		this.setCurrentCell(initialCell);
+	}
+
+	void setWidth(float newWidth){
+		pWidth = newWidth;
+	}
+
+	void setHeight(float newHeight){
+		pHeight = newHeight;
 	}
 
 	Cell getCurrentCell(){
@@ -27,11 +37,19 @@ public class PackMan {
 		if (newCell.getBean()) {
 			newCell.setBean(false);
 			score = score + 1;
-			beansEaten();
+			callback.callbackfunction("");
 		}
 		currentCell = newCell;
 		x = newCell.getX();
 		y = newCell.getY();
+	}
+
+	void setX(float newX){
+		x = newX;
+	}
+
+	void setY(float newY){
+		y = newY;
 	}
 
 	void setDirection(int newDirection){

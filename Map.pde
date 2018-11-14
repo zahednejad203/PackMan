@@ -21,7 +21,7 @@ class Map{
 	void createMap(){
 		JSONArray values = loadJSONArray(mapFile);
 
-		for (int i = 0; i < widthSize*heightSize ; ++i) {			
+		for (int i = 0; i < values.size() ; ++i) {			
 			JSONArray myWalls = values.getJSONArray(i);			
 			int[] walls = new int[4];
 			for (int j = 0; j < myWalls.size(); ++j) {

@@ -1,4 +1,4 @@
-class GameMap extends Map implements Response{	
+class GameMap extends Map implements Response,Callback{	
 	ArrayList<PackMan> myPack = new ArrayList<PackMan>() ;
 	ArrayList<Integer> listenersNumber = new ArrayList<Integer>();
 
@@ -7,12 +7,12 @@ class GameMap extends Map implements Response{
 	}
 
 	void initPackMans(){
-		color c1 = color(255, 255, 0);
-		PackMan firstPack = new PackMan((Cell)map.get(0),blockSize/2 , blockSize/2,c1,"packOne");
+		color c1 = color(255, 0, 0);
+		PackMan firstPack = new PackMan((Cell)map.get(0),blockSize/2 , blockSize/2,c1,"packOne" , this);
 		myPack.add(firstPack);
 
-		color c2 = color(255, 0, 0);
-		PackMan secondPack = new PackMan((Cell)map.get(widthSize - 1),blockSize/2 , blockSize/2,c2,"packTwo");
+		color c2 = color(255, 255, 0);
+		PackMan secondPack = new PackMan((Cell)map.get(widthSize - 1),blockSize/2 , blockSize/2,c2,"packTwo" , this);
 		myPack.add(secondPack);
 	}
 
@@ -21,7 +21,7 @@ class GameMap extends Map implements Response{
 		for (int i = 0; i < myPack.size(); ++i) {
 			PackMan pack = myPack.get(i);
 			pack.drawMe();
-			pack.drawScore(width/4 + i*width/3 , height/20);
+			pack.drawScore(width/4 + i*width/3 , height/12);
 		}
 	}
 
@@ -83,7 +83,7 @@ class GameMap extends Map implements Response{
 		}
 	}	
 
-	void beansEaten(){
+	void callbackfunction(String param){
 		beansNumber = beansNumber - 1;		
 		if (beansNumber <= 0) {
 			gameHasFinished();
@@ -93,15 +93,18 @@ class GameMap extends Map implements Response{
 	void showResult(){
 		String winnerName = "";
 		int winnerScore = 0;
+		PackMan winnerPack = myPack.get(0);
 		for (int i = 0; i < myPack.size(); ++i) {
-			PackMan winnerPack = myPack.get(i);
-			if (winnerPack.score > winnerScore) {
-				winnerName = winnerPack.name;
-				winnerScore = winnerPack.score;
-			}else if (winnerPack.score == winnerScore){
+			PackMan tmpPack = myPack.get(i);
+			if (tmpPack.score > winnerScore) {
+				winnerName = tmpPack.name;
+				winnerScore = tmpPack.score;			
+				winnerPack = tmpPack;
+			}else if (tmpPack.score == winnerScore){
 				winnerName = "";
 			}
 		}
+
 		String winnerText = "The Winner is : ";
 		if (winnerName == "") {
 			winnerText = "Tie Result";
@@ -114,7 +117,14 @@ class GameMap extends Map implements Response{
 		if (winnerName != "") {
 			textSize(32);
 			float winnerNameWidth = textWidth(winnerName + " with : " + winnerScore + " points");
-			text(winnerName + " with : " + winnerScore + " points", width/2 - winnerNameWidth/2 , height/2 + 16);
+			text(winnerName + " with " + winnerScore + " points", width/2 - winnerNameWidth/2 , height/2 + 25);
+
+			winnerPack.setX(width/2);
+			winnerPack.setY(height/4);
+			winnerPack.setWidth(width/5);
+			winnerPack.setHeight(width/5);
+			winnerPack.drawMe();			
 		}
+
 	}
 }

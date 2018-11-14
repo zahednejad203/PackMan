@@ -1,13 +1,13 @@
-GameMap gameMap; 
-CreationMap mapCreator;
+import java.util.Iterator;
+import java.util.List;
+
 String gameState = "";
 ArrayList<Listener> activeListeners = new ArrayList<Listener>();
 
 void setup(){
-  	// fullScreen();
-  	size(800, 800);
+  	fullScreen();
+  	// size(800, 800);
   	frameRate(5);
-  	gameState = GAME_NOT_STARTED;
   	createMainScene();
 }
 
@@ -15,59 +15,56 @@ void draw(){
 	background(0);
 	if (gameState == GAME_NOT_STARTED) {
 		showMainScene();
-	}else if (gameState == GAME_PLAYING) {		
-		gameMap.drawMap();
-		gameMap.updatePackMan();
-	}else if (gameState == GAME_FINISHED){
-		gameMap.showResult();
+	}else if (gameState == GAME_PLAYING || gameState == GAME_FINISHED) {		
+		showGameScene();
 	}else if (gameState == GAME_CREATING) {
-		mapCreator.drawMap();
+		showNewMapScene();
+	}else if (gameState == GAME_SELECTIN_MAP){
+		showSelectMapScene();
 	}
 }
 
 void addEventListener(String type , Response callback){
-	Listener newListener = new Listener(type , callback);
-	activeListeners.add(newListener);	
+	Listener newListener = new Listener(type , callback , activeListeners.size());
+	activeListeners.add(newListener);
 	callback.setNumber(activeListeners.size()-1);
+	// println("added number: " + activeListeners.size());
 }
 
 void removeEventListener(Response callback){
-	ArrayList<Integer> listenerList = callback.getNumber();
-	for (int i = 0; i < listenerList.size(); ++i) {
-		int listenerNum = listenerList.get(i);
-		activeListeners.remove(listenerNum);	
+	List<Listener> activeListenerList = activeListeners;	
+	List<Integer> listenerList = callback.getNumber();
+
+	Iterator itr = activeListeners.iterator(); 
+    while (itr.hasNext()) 
+    { 
+        Listener x = (Listener)itr.next();
+        
+        for (int i = 0; i < listenerList.size(); ++i) {
+        	int listenerNum = listenerList.get(i);
+	        if (x.getId() == listenerNum) 
+	        	itr.remove();         	
+        }
+    } 
+}
+
+void dispatchEvent(String type){
+	for (int i = 0; i < activeListeners.size(); ++i) {
+		Listener myListener = activeListeners.get(i);
+		if (myListener.getType() == type) {
+			myListener.excuteCallback();
+		}
 	}
 }
 
 // events 
 
 void keyPressed() {
-	for (int i = 0; i < activeListeners.size(); ++i) {
-		Listener myListener = activeListeners.get(i);
-		if (myListener.getType() == "keyPress") {
-			myListener.excuteCallback();
-		}
-	}
-	if (gameState == GAME_FINISHED) {
-		if (key != CODED) {
-			if (key == 'r') {
-				startGame();
-			}
-		}
-	}
+	dispatchEvent("keyPress");
 }
 
 void mouseClicked() {
-	for (int i = 0; i < activeListeners.size(); ++i) {
-		Listener myListener = activeListeners.get(i);
-		if (myListener.getType() == "clicked") {
-			myListener.excuteCallback();
-		}
-	}
-}
-
-void beansEaten(){
-	gameMap.beansEaten();
+	dispatchEvent("clicked");
 }
 
 void gameHasFinished(){	
